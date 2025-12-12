@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View -->
+    <record id="view_hospital_doctor_list" model="ir.ui.view">
+        <field name="name">hospital.doctor.list</field>
+        <field name="model">hospital.doctor</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="specialty"/>
+                <field name="phone"/>
+                <field name="consultation_fee"/>
+                <field name="patient_count"/>
+                <field name="availability" widget="badge" 
+                       decoration-success="availability == 'available'"
+                       decoration-warning="availability == 'busy'"
+                       decoration-danger="availability == 'on_leave'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_hospital_doctor_form" model="ir.ui.view">
+        <field name="name">hospital.doctor.form</field>
+        <field name="model">hospital.doctor</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="%(action_report_doctor_profile)d" 
+                            string="Print Doctor Profile" 
+                            type="action" 
+                            class="oe_highlight"
+                            icon="fa-print"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_hospital_patient)d"
+                                type="action"
+                                class="oe_stat_button"
+                                icon="fa-users"
+                                context="{'default_doctor_id': id}">
+                            <field name="patient_count" widget="statinfo" string="Patients"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="specialty"/>
+                            <field name="consultation_fee"/>
+                        </group>
+                        <group>
+                            <field name="phone" widget="phone"/>
+                            <field name="email" widget="email"/>
+                            <field name="max_patients"/>
+                            <field name="availability"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Patients">
+                            <field name="patient_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="age"/>
+                                    <field name="gender"/>
+                                    <field name="is_child"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_hospital_doctor_kanban" model="ir.ui.view">
+        <field name="name">hospital.doctor.kanban</field>
+        <field name="model">hospital.doctor</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="specialty"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="consultation_fee"/>
+                <field name="patient_count"/>
+                <field name="max_patients"/>
+                <field name="availability"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <!-- Card Header -->
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">
+                                        <strong>
+                                            <i class="fa fa-user-md"/> 
+                                            Dr. <field name="name"/>
+                                        </strong>
+                                    </div>
+                                    <div class="o_secondary">
+                                        <field name="specialty" widget="badge" 
+                                               decoration-success="specialty == 'cardiology'"
+                                               decoration-info="specialty == 'pediatrics'"
+                                               decoration-warning="specialty == 'neurology'"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Card Body -->
+                            <div class="o_kanban_card_content mt-3">
+                                <!-- Contact Info -->
+                                <div class="row mb-2">
+                                    <div class="col-12">
+                                        <i class="fa fa-phone" style="color: #17a2b8;"/> 
+                                        <field name="phone"/>
+                                    </div>
+                                </div>
+                                <div class="row mb-2" t-if="record.email.raw_value">
+                                    <div class="col-12">
+                                        <i class="fa fa-envelope" style="color: #17a2b8;"/> 
+                                        <field name="email" widget="email"/>
+                                    </div>
+                                </div>
+                                
+                                <!-- Stats -->
+                                <div class="row mt-3">
+                                    <div class="col-6">
+                                        <div style="background-color: #e3f2fd; padding: 10px; border-radius: 5px; text-align: center;">
+                                            <h4 style="margin: 0; color: #1976d2;">
+                                                <field name="patient_count"/>
+                                            </h4>
+                                            <small style="color: #666;">Patients</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div style="background-color: #f3e5f5; padding: 10px; border-radius: 5px; text-align: center;">
+                                            <h4 style="margin: 0; color: #7b1fa2;">
+                                                <field name="consultation_fee"/> EGP
+                                            </h4>
+                                            <small style="color: #666;">Fee</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Capacity Bar -->
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <t t-set="percentage" t-value="record.max_patients.raw_value ? Math.round((record.patient_count.raw_value / record.max_patients.raw_value * 100)) : 0"/>
+                                        <t t-set="bar_color" t-value="percentage >= 90 ? '#dc3545' : (percentage >= 70 ? '#ffc107' : '#28a745')"/>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar" 
+                                                 role="progressbar" 
+                                                 t-attf-style="width: #{percentage}%; background-color: #{bar_color}"
+                                                 t-att-aria-valuenow="percentage" 
+                                                 aria-valuemin="0" 
+                                                 aria-valuemax="100">
+                                                <t t-esc="percentage"/>%
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">
+                                            <field name="patient_count"/> / <field name="max_patients"/> capacity
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Card Footer -->
+                            <div class="o_kanban_card_footer mt-3">
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="availability" widget="badge" 
+                                               decoration-success="availability == 'available'"
+                                               decoration-warning="availability == 'busy'"
+                                               decoration-danger="availability == 'on_leave'"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <span t-if="record.active.raw_value" 
+                                              class="badge badge-success">Active</span>
+                                        <span t-else="" 
+                                              class="badge badge-secondary">Inactive</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_hospital_doctor_search" model="ir.ui.view">
+        <field name="name">hospital.doctor.search</field>
+        <field name="model">hospital.doctor</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="specialty"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <filter string="Has Patients" name="has_patients" domain="[('patient_count', '>', 0)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Specialty" name="group_specialty" context="{'group_by': 'specialty'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_hospital_doctor" model="ir.actions.act_window">
+        <field name="name">Doctors</field>
+        <field name="res_model">hospital.doctor</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first doctor
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_hospital_doctor"
+              name="Doctors"
+              parent="menu_hospital_root"
+              action="action_hospital_doctor"
+              sequence="5"/>
+
+</odoo>

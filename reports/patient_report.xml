@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Patient Card Report Template -->
+    <template id="report_patient_card">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="patient">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Header -->
+                        <div class="row" style="border-bottom: 2px solid #0275d8; padding-bottom: 10px; margin-bottom: 20px;">
+                            <div class="col-8">
+                                <h2 style="color: #0275d8;">
+                                    <i class="fa fa-user-md"></i> Patient Medical Card
+                                </h2>
+                            </div>
+                            <div class="col-4 text-right">
+                                <h3 style="color: #0275d8;">
+                                    <span t-field="patient.reference"/>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <!-- Patient Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px;">
+                                    <h4 style="color: #0275d8; margin-bottom: 15px;">
+                                        <i class="fa fa-user"></i> Personal Information
+                                    </h4>
+                                    <table class="table table-sm table-borderless">
+                                        <tr>
+                                            <td width="25%"><strong>Patient Name:</strong></td>
+                                            <td width="25%"><span t-field="patient.name"/></td>
+                                            <td width="25%"><strong>Gender:</strong></td>
+                                            <td width="25%">
+                                                <span t-if="patient.gender == 'male'" class="badge badge-primary">Male</span>
+                                                <span t-if="patient.gender == 'female'" class="badge badge-danger">Female</span>
+                                                <span t-if="patient.gender == 'other'" class="badge badge-secondary">Other</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Date of Birth:</strong></td>
+                                            <td><span t-field="patient.date_of_birth"/></td>
+                                            <td><strong>Age:</strong></td>
+                                            <td>
+                                                <span t-field="patient.age"/> years
+                                                <span t-if="patient.is_child" class="badge badge-warning ml-2">Child</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Admission Date:</strong></td>
+                                            <td><span t-field="patient.admission_date"/></td>
+                                            <td><strong>Status:</strong></td>
+                                            <td>
+                                                <span t-if="patient.active" class="badge badge-success">Active</span>
+                                                <span t-else="" class="badge badge-secondary">Inactive</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Doctor Information -->
+                        <div class="row mb-4" t-if="patient.doctor_id">
+                            <div class="col-12">
+                                <div style="background-color: #e7f3ff; padding: 15px; border-radius: 5px; border-left: 4px solid #0275d8;">
+                                    <h4 style="color: #0275d8; margin-bottom: 15px;">
+                                        <i class="fa fa-stethoscope"></i> Assigned Doctor
+                                    </h4>
+                                    <table class="table table-sm table-borderless">
+                                        <tr>
+                                            <td width="25%"><strong>Doctor Name:</strong></td>
+                                            <td width="25%"><span t-field="patient.doctor_id.name"/></td>
+                                            <td width="25%"><strong>Specialty:</strong></td>
+                                            <td width="25%">
+                                                <span t-field="patient.doctor_id.specialty" class="badge badge-info"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Phone:</strong></td>
+                                            <td><span t-field="patient.doctor_id.phone"/></td>
+                                            <td><strong>Email:</strong></td>
+                                            <td><span t-field="patient.doctor_id.email"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Consultation Fee:</strong></td>
+                                            <td><span t-field="patient.doctor_id.consultation_fee"/> EGP</td>
+                                            <td><strong>Availability:</strong></td>
+                                            <td>
+                                                <span t-if="patient.doctor_id.availability == 'available'" class="badge badge-success">Available</span>
+                                                <span t-elif="patient.doctor_id.availability == 'busy'" class="badge badge-warning">Busy</span>
+                                                <span t-else="" class="badge badge-danger">On Leave</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medical Notes -->
+                        <div class="row mb-4" t-if="patient.notes">
+                            <div class="col-12">
+                                <div style="background-color: #fff3cd; padding: 15px; border-radius: 5px; border-left: 4px solid #ffc107;">
+                                    <h4 style="color: #856404; margin-bottom: 15px;">
+                                        <i class="fa fa-sticky-note"></i> Medical Notes
+                                    </h4>
+                                    <p style="white-space: pre-wrap;"><span t-field="patient.notes"/></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="row mt-5">
+                            <div class="col-12 text-center">
+                                <p style="color: #6c757d; font-size: 12px; border-top: 1px solid #dee2e6; padding-top: 15px;">
+                                    <i class="fa fa-print"></i> Printed on <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/>
+                                    <br/>
+                                    <strong>Hospital Management System</strong> - Confidential Medical Record
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

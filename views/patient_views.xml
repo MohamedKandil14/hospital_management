@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View -->
+    <record id="view_hospital_patient_tree" model="ir.ui.view">
+        <field name="name">hospital.patient.tree</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <field name="doctor_id"/>
+                <field name="admission_date"/>
+                <field name="priority" widget="priority"/>
+                <field name="state" widget="badge" 
+                       decoration-info="state == 'new'"
+                       decoration-warning="state == 'waiting'"
+                       decoration-primary="state == 'consultation'"
+                       decoration-success="state == 'done'"
+                       decoration-danger="state == 'cancel'"/>
+                <field name="is_child"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_hospital_patient_form" model="ir.ui.view">
+        <field name="name">hospital.patient.form</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <!-- Workflow Buttons -->
+                    <button name="action_waiting" 
+                            type="object" 
+                            string="Move to Waiting" 
+                            class="btn-primary"
+                            invisible="state != 'new'"/>
+                    
+                    <button name="action_consultation" 
+                            type="object" 
+                            string="Start Consultation" 
+                            class="btn-success"
+                            invisible="state != 'waiting'"/>
+                    
+                    <button name="action_done" 
+                            type="object" 
+                            string="Mark as Done" 
+                            class="btn-info"
+                            invisible="state != 'consultation'"/>
+                    
+                    <button name="action_cancel" 
+                            type="object" 
+                            string="Cancel" 
+                            class="btn-danger"
+                            invisible="state in ['done', 'cancel']"
+                            confirm="Are you sure you want to cancel this appointment?"/>
+                    
+                    <button name="action_reset_to_new" 
+                            type="object" 
+                            string="Reset to New" 
+                            invisible="state not in ['cancel']"/>
+                    
+                    <!-- Print Button -->
+                    <button name="%(action_report_patient_card)d" 
+                            string="Print Patient Card" 
+                            type="action" 
+                            class="oe_highlight"
+                            icon="fa-print"/>
+                    
+                    <!-- Status Bar -->
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="new,waiting,consultation,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="date_of_birth"/>
+                            <field name="age"/>
+                            <field name="gender"/>
+                            <field name="priority" widget="priority"/>
+                        </group>
+                        <group>
+                            <field name="doctor_id"/>
+                            <field name="admission_date"/>
+                            <field name="is_child"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes" placeholder="Add notes here..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_hospital_patient_kanban" model="ir.ui.view">
+        <field name="name">hospital.patient.kanban</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <field name="doctor_id"/>
+                <field name="is_child"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <!-- Card Header -->
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="o_secondary">
+                                        <field name="reference"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Card Body -->
+                            <div class="o_kanban_card_content">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <i class="fa fa-birthday-cake" title="Age"/> 
+                                        <field name="age"/> years
+                                    </div>
+                                    <div class="col-6">
+                                        <field name="gender" widget="badge" 
+                                               decoration-info="gender == 'male'"
+                                               decoration-danger="gender == 'female'"
+                                               decoration-muted="gender == 'other'"/>
+                                    </div>
+                                </div>
+                                <div class="row mt-2" t-if="record.doctor_id.raw_value">
+                                    <div class="col-12">
+                                        <i class="fa fa-user-md" title="Doctor"/> 
+                                        <field name="doctor_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Card Footer -->
+                            <div class="o_kanban_card_footer">
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span t-if="record.is_child.raw_value" 
+                                              class="badge badge-warning">
+                                            <i class="fa fa-child"/> Child
+                                        </span>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <span t-if="record.active.raw_value" 
+                                              class="badge badge-success">Active</span>
+                                        <span t-else="" 
+                                              class="badge badge-secondary">Inactive</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_hospital_patient_search" model="ir.ui.view">
+        <field name="name">hospital.patient.search</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <field name="doctor_id"/>
+                <filter string="Children" name="children" domain="[('is_child', '=', True)]"/>
+                <filter string="Adults" name="adults" domain="[('is_child', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Gender" name="group_gender" context="{'group_by': 'gender'}"/>
+                    <filter string="Doctor" name="group_doctor" context="{'group_by': 'doctor_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_hospital_patient" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">hospital.patient</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first patient
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_hospital_root"
+              name="Hospital"
+              sequence="10"/>
+
+    <menuitem id="menu_hospital_patient"
+              name="Patients"
+              parent="menu_hospital_root"
+              action="action_hospital_patient"
+              sequence="10"/>
+
+</odoo>
