@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Appointment Confirmation Email -->
+    <record id="email_template_appointment_confirmation" model="mail.template">
+        <field name="name">Appointment Confirmation</field>
+        <field name="model_id" ref="model_hospital_appointment"/>
+        <field name="subject">Appointment Confirmation - {{ object.reference }}</field>
+        <field name="email_from">{{ (object.company_id.email or user.email_formatted) }}</field>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <!-- Header -->
+                <div style="background-color: #7c3aed; color: white; padding: 20px; text-align: center;">
+                    <h1 style="margin: 0;">🏥 Appointment Confirmed</h1>
+                </div>
+                
+                <!-- Body -->
+                <div style="padding: 30px; background-color: #f9fafb;">
+                    <p style="font-size: 16px;">Dear <strong>{{ object.patient_id.name }}</strong>,</p>
+                    
+                    <p>Your appointment has been confirmed. Please find the details below:</p>
+                    
+                    <!-- Appointment Details Card -->
+                    <div style="background-color: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <h3 style="color: #7c3aed; margin-top: 0;">📋 Appointment Details</h3>
+                        
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
+                                    <strong>Reference:</strong>
+                                </td>
+                                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
+                                    {{ object.reference }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
+                                    <strong>📅 Date:</strong>
+                                </td>
+                                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
+                                    {{ format_date(object.appointment_date) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
+                                    <strong>🕐 Time:</strong>
+                                </td>
+                                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
+                                    {{ object.appointment_time }} ({{ object.duration }} hour)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
+                                    <strong>👨‍⚕️ Doctor:</strong>
+                                </td>
+                                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
+                                    Dr. {{ object.doctor_id.name }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 0;">
+                                    <strong>💰 Fee:</strong>
+                                </td>
+                                <td style="padding: 10px 0;">
+                                    {{ object.consultation_fee }} EGP
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <!-- Important Notes -->
+                    <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                        <p style="margin: 0; color: #92400e;">
+                            <strong>⚠️ Important:</strong> Please arrive 15 minutes before your appointment time.
+                        </p>
+                    </div>
+                    
+                    <p style="margin-top: 30px;">If you need to reschedule or cancel your appointment, please contact us as soon as possible.</p>
+                    
+                    <p>Thank you for choosing our hospital!</p>
+                </div>
+                
+                <!-- Footer -->
+                <div style="background-color: #1f2937; color: white; padding: 20px; text-align: center;">
+                    <p style="margin: 0;">
+                        <strong>{{ object.company_id.name }}</strong>
+                    </p>
+                    <p style="margin: 5px 0;">
+                        {{ object.company_id.phone }} | {{ object.company_id.email }}
+                    </p>
+                    <p style="margin: 5px 0; font-size: 12px; color: #9ca3af;">
+                        This is an automated email. Please do not reply.
+                    </p>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <!-- Appointment Reminder Email -->
+    <record id="email_template_appointment_reminder" model="mail.template">
+        <field name="name">Appointment Reminder</field>
+        <field name="model_id" ref="model_hospital_appointment"/>
+        <field name="subject">Reminder: Your Appointment Tomorrow - {{ object.reference }}</field>
+        <field name="email_from">{{ (object.company_id.email or user.email_formatted) }}</field>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background-color: #3b82f6; color: white; padding: 20px; text-align: center;">
+                    <h1 style="margin: 0;">🔔 Appointment Reminder</h1>
+                </div>
+                
+                <div style="padding: 30px; background-color: #f9fafb;">
+                    <p style="font-size: 16px;">Dear <strong>{{ object.patient_id.name }}</strong>,</p>
+                    
+                    <p>This is a friendly reminder about your upcoming appointment:</p>
+                    
+                    <div style="background-color: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <h3 style="color: #3b82f6; margin-top: 0;">📅 Tomorrow's Appointment</h3>
+                        <p><strong>Date:</strong> {{ format_date(object.appointment_date) }}</p>
+                        <p><strong>Time:</strong> {{ object.appointment_time }}</p>
+                        <p><strong>Doctor:</strong> Dr. {{ object.doctor_id.name }}</p>
+                        <p><strong>Reference:</strong> {{ object.reference }}</p>
+                    </div>
+                    
+                    <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0;">
+                        <p style="margin: 0;">
+                            <strong>⏰ Please arrive 15 minutes early!</strong>
+                        </p>
+                    </div>
+                    
+                    <p>We look forward to seeing you!</p>
+                </div>
+                
+                <div style="background-color: #1f2937; color: white; padding: 20px; text-align: center;">
+                    <p style="margin: 0;">{{ object.company_id.name }}</p>
+                    <p style="margin: 5px 0; font-size: 12px;">{{ object.company_id.phone }}</p>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <!-- Patient Welcome Email -->
+    <record id="email_template_patient_welcome" model="mail.template">
+        <field name="name">Patient Welcome Email</field>
+        <field name="model_id" ref="model_hospital_patient"/>
+        <field name="subject">Welcome to {{ object.company_id.name }} - {{ object.reference }}</field>
+        <field name="email_from">{{ (object.company_id.email or user.email_formatted) }}</field>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background-color: #10b981; color: white; padding: 20px; text-align: center;">
+                    <h1 style="margin: 0;">🎉 Welcome to {{ object.company_id.name }}!</h1>
+                </div>
+                
+                <div style="padding: 30px; background-color: #f9fafb;">
+                    <p style="font-size: 16px;">Dear <strong>{{ object.name }}</strong>,</p>
+                    
+                    <p>Welcome to {{ object.company_id.name }}! We're delighted to have you as our patient.</p>
+                    
+                    <div style="background-color: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <h3 style="color: #10b981; margin-top: 0;">👤 Your Patient Information</h3>
+                        <p><strong>Patient ID:</strong> {{ object.reference }}</p>
+                        <p><strong>Name:</strong> {{ object.name }}</p>
+                        <p><strong>Admission Date:</strong> {{ format_date(object.admission_date) }}</p>
+                    </div>
+                    
+                    <p>You can now schedule appointments and access our services.</p>
+                    
+                    <p>If you have any questions, please don't hesitate to contact us.</p>
+                    
+                    <p>Best regards,<br/>{{ object.company_id.name }} Team</p>
+                </div>
+                
+                <div style="background-color: #1f2937; color: white; padding: 20px; text-align: center;">
+                    <p style="margin: 0;"><strong>{{ object.company_id.name }}</strong></p>
+                    <p style="margin: 5px 0;">{{ object.company_id.phone }} | {{ object.company_id.email }}</p>
+                    <p style="margin: 5px 0; font-size: 12px; color: #9ca3af;">
+                        Your health is our priority
+                    </p>
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>

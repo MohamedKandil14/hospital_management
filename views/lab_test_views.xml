@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Lab Test List View -->
+    <record id="view_hospital_lab_test_list" model="ir.ui.view">
+        <field name="name">hospital.lab.test.list</field>
+        <field name="model">hospital.lab.test</field>
+        <field name="arch" type="xml">
+            <list string="Lab Tests" decoration-info="state=='draft'" 
+                  decoration-success="state=='completed'" decoration-muted="state=='cancelled'">
+                <field name="reference"/>
+                <field name="test_date"/>
+                <field name="patient_name"/>
+                <field name="test_name"/>
+                <field name="test_category"/>
+                <field name="priority" widget="badge"
+                       decoration-info="priority=='routine'"
+                       decoration-warning="priority=='urgent'"
+                       decoration-danger="priority=='stat'"/>
+                <field name="result_status" widget="badge" optional="show"
+                       decoration-success="result_status=='normal'"
+                       decoration-warning="result_status=='abnormal'"
+                       decoration-danger="result_status=='critical'"/>
+                <field name="state" widget="badge"
+                       decoration-info="state=='draft'"
+                       decoration-primary="state=='requested'"
+                       decoration-warning="state=='in_progress'"
+                       decoration-success="state=='completed'"
+                       decoration-muted="state=='cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Lab Test Form View -->
+    <record id="view_hospital_lab_test_form" model="ir.ui.view">
+        <field name="name">hospital.lab.test.form</field>
+        <field name="model">hospital.lab.test</field>
+        <field name="arch" type="xml">
+            <form string="Lab Test">
+                <header>
+                    <button name="action_request" string="Request Test" 
+                            type="object" class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_start_test" string="Start Test" 
+                            type="object" class="oe_highlight"
+                            invisible="state != 'requested'"/>
+                    <button name="action_complete" string="Complete Test" 
+                            type="object" class="oe_highlight"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_cancel" string="Cancel" 
+                            type="object"
+                            invisible="state not in ['draft', 'requested']"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" 
+                            type="object"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="draft,requested,in_progress,completed"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_attachments" 
+                                type="object" 
+                                class="oe_stat_button" 
+                                icon="fa-paperclip">
+                            <field name="attachment_count" widget="statinfo" 
+                                   string="Files"/>
+                        </button>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group name="patient_info" string="Patient Information">
+                            <field name="patient_id" 
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="patient_age"/>
+                            <field name="patient_gender"/>
+                        </group>
+                        
+                        <group name="test_info" string="Test Information">
+                            <field name="test_type" 
+                                   options="{'no_create_edit': True}"/>
+                            <field name="test_category"/>
+                            <field name="doctor_id" 
+                                   options="{'no_create': True}"/>
+                            <field name="test_date"/>
+                            <field name="priority"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group string="Related Records">
+                            <field name="appointment_id" 
+                                   domain="[('patient_id', '=', patient_id)]"
+                                   options="{'no_create': True}"/>
+                            <field name="medical_record_id" 
+                                   domain="[('patient_id', '=', patient_id)]"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        
+                        <group string="Lab Information">
+                            <field name="lab_technician"/>
+                            <field name="result_date"/>
+                            <field name="result_status" widget="badge"
+                                   invisible="state != 'completed'"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Test Results" name="results">
+                            <field name="line_ids">
+                                <list string="Parameters" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="parameter_name"/>
+                                    <field name="result_value"/>
+                                    <field name="unit"/>
+                                    <field name="normal_range"/>
+                                    <field name="is_abnormal" widget="boolean_toggle"/>
+                                    <field name="is_critical" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                            
+                            <group string="Result Summary">
+                                <field name="result_summary" nolabel="1" 
+                                       placeholder="Overall test result summary and interpretation..."/>
+                            </group>
+                        </page>
+                        
+                        <page string="Attachments" name="attachments">
+                            <field name="attachment_ids" widget="many2many_binary" 
+                                   nolabel="1"
+                                   context="{'default_res_model': 'hospital.lab.test', 'default_res_id': id}"/>
+                        </page>
+                        
+                        <page string="Notes" name="notes">
+                            <group>
+                                <field name="notes" nolabel="1" 
+                                       placeholder="Additional notes and comments..."/>
+                            </group>
+                            <group>
+                                <field name="active" widget="boolean_toggle"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Lab Test Search View -->
+    <record id="view_hospital_lab_test_search" model="ir.ui.view">
+        <field name="name">hospital.lab.test.search</field>
+        <field name="model">hospital.lab.test</field>
+        <field name="arch" type="xml">
+            <search string="Search Lab Tests">
+                <field name="reference"/>
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <field name="test_type"/>
+                
+                <filter string="Draft" name="draft" 
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Requested" name="requested" 
+                        domain="[('state', '=', 'requested')]"/>
+                <filter string="In Progress" name="in_progress" 
+                        domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Completed" name="completed" 
+                        domain="[('state', '=', 'completed')]"/>
+                
+                <separator/>
+                
+                <filter string="Urgent" name="urgent" 
+                        domain="[('priority', 'in', ['urgent', 'stat'])]"/>
+                <filter string="Abnormal Results" name="abnormal" 
+                        domain="[('result_status', '=', 'abnormal')]"/>
+                <filter string="Critical Results" name="critical" 
+                        domain="[('result_status', '=', 'critical')]"/>
+                
+                <separator/>
+                
+                <filter string="Today" name="today" 
+                        domain="[('test_date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="This Week" name="this_week" 
+                        domain="[('test_date', '&gt;=', (context_today() - relativedelta(weeks=1)).strftime('%Y-%m-%d'))]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Patient" name="group_patient" 
+                            context="{'group_by': 'patient_id'}"/>
+                    <filter string="Test Type" name="group_test_type" 
+                            context="{'group_by': 'test_type'}"/>
+                    <filter string="Category" name="group_category" 
+                            context="{'group_by': 'test_category'}"/>
+                    <filter string="Status" name="group_state" 
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Priority" name="group_priority" 
+                            context="{'group_by': 'priority'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Lab Test Action -->
+    <record id="action_hospital_lab_test" model="ir.actions.act_window">
+        <field name="name">Lab Tests</field>
+        <field name="res_model">hospital.lab.test</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_requested': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Lab Test
+            </p>
+            <p>
+                Manage laboratory tests and results.
+            </p>
+        </field>
+    </record>
+
+    <!-- ==================== Lab Test Type Views ==================== -->
+    
+    <!-- Lab Test Type List View -->
+    <record id="view_hospital_lab_test_type_list" model="ir.ui.view">
+        <field name="name">hospital.lab.test.type.list</field>
+        <field name="model">hospital.lab.test.type</field>
+        <field name="arch" type="xml">
+            <list string="Test Types">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category"/>
+                <field name="cost"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Lab Test Type Form View -->
+    <record id="view_hospital_lab_test_type_form" model="ir.ui.view">
+        <field name="name">hospital.lab.test.type.form</field>
+        <field name="model">hospital.lab.test.type</field>
+        <field name="arch" type="xml">
+            <form string="Test Type">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="category"/>
+                        </group>
+                        <group>
+                            <field name="cost"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Description">
+                        <field name="description" nolabel="1" 
+                               placeholder="Test description and purpose..."/>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Parameters" name="parameters">
+                            <field name="parameter_ids">
+                                <list string="Test Parameters" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="unit"/>
+                                    <field name="normal_range"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Lab Test Type Action -->
+    <record id="action_hospital_lab_test_type" model="ir.actions.act_window">
+        <field name="name">Test Types</field>
+        <field name="res_model">hospital.lab.test.type</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Test Type
+            </p>
+            <p>
+                Define laboratory test types and their parameters.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_hospital_lab_root" 
+              name="Laboratory" 
+              parent="menu_hospital_root" 
+              sequence="60"/>
+    
+    <menuitem id="menu_hospital_lab_test" 
+              name="Lab Tests" 
+              parent="menu_hospital_lab_root" 
+              action="action_hospital_lab_test" 
+              sequence="10"/>
+    
+    <menuitem id="menu_hospital_lab_test_type" 
+              name="Test Types" 
+              parent="menu_hospital_lab_root" 
+              action="action_hospital_lab_test_type" 
+              sequence="20"/>
+</odoo>

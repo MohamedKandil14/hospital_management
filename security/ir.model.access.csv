@@ -1,3 +1,14 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hospital_patient,access.hospital.patient,model_hospital_patient,base.group_user,1,1,1,1
 access_hospital_doctor,access.hospital.doctor,model_hospital_doctor,base.group_user,1,1,1,1
+access_hospital_appointment,access.hospital.appointment,model_hospital_appointment,base.group_user,1,1,1,1
+access_hospital_medical_record,access.hospital.medical.record,model_hospital_medical_record,base.group_user,1,1,1,1
+access_hospital_billing,access.hospital.billing,model_hospital_billing,base.group_user,1,1,1,1
+access_hospital_billing_line,access.hospital.billing.line,model_hospital_billing_line,base.group_user,1,1,1,1
+access_hospital_prescription,access.hospital.prescription,model_hospital_prescription,base.group_user,1,1,1,1
+access_hospital_prescription_line,access.hospital.prescription.line,model_hospital_prescription_line,base.group_user,1,1,1,1
+access_hospital_lab_test,access.hospital.lab.test,model_hospital_lab_test,base.group_user,1,1,1,1
+access_hospital_lab_test_line,access.hospital.lab.test.line,model_hospital_lab_test_line,base.group_user,1,1,1,1
+access_hospital_lab_test_type,access.hospital.lab.test.type,model_hospital_lab_test_type,base.group_user,1,1,1,1
+access_hospital_lab_test_parameter,access.hospital.lab.test.parameter,model_hospital_lab_test_parameter,base.group_user,1,1,1,1
+access_hospital_dashboard,access.hospital.dashboard,model_hospital_dashboard,base.group_user,1,1,1,1

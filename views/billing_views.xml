@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Billing List View -->
+    <record id="view_hospital_billing_list" model="ir.ui.view">
+        <field name="name">hospital.billing.list</field>
+        <field name="model">hospital.billing</field>
+        <field name="arch" type="xml">
+            <list string="Billings" decoration-info="state=='draft'" 
+                  decoration-success="state=='paid'" decoration-muted="state=='cancelled'">
+                <field name="reference"/>
+                <field name="billing_date"/>
+                <field name="patient_name"/>
+                <field name="doctor_name"/>
+                <field name="total_amount" sum="Total"/>
+                <field name="paid_amount" sum="Paid"/>
+                <field name="balance_amount" sum="Balance"/>
+                <field name="payment_status" widget="badge"
+                       decoration-danger="payment_status=='unpaid'"
+                       decoration-warning="payment_status=='partial'"
+                       decoration-success="payment_status=='paid'"/>
+                <field name="state" widget="badge"
+                       decoration-info="state=='draft'"
+                       decoration-success="state=='paid'"
+                       decoration-muted="state=='cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Billing Form View -->
+    <record id="view_hospital_billing_form" model="ir.ui.view">
+        <field name="name">hospital.billing.form</field>
+        <field name="model">hospital.billing</field>
+        <field name="arch" type="xml">
+            <form string="Billing">
+                <header>
+                    <button name="action_confirm" string="Confirm" 
+                            type="object" class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_register_payment" string="Register Payment" 
+                            type="object" class="oe_highlight"
+                            invisible="state not in ['confirmed', 'paid'] or balance_amount &lt;= 0"/>
+                    <button name="action_mark_as_paid" string="Mark as Paid" 
+                            type="object"
+                            invisible="state != 'confirmed' or balance_amount &lt;= 0"/>
+                    <button name="action_cancel" string="Cancel" 
+                            type="object"
+                            invisible="state not in ['draft', 'confirmed']"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" 
+                            type="object"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="draft,confirmed,paid"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group name="billing_info" string="Billing Information">
+                            <field name="patient_id" 
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="patient_reference"/>
+                            <field name="doctor_id" 
+                                   options="{'no_create': True}"/>
+                            <field name="appointment_id" 
+                                   domain="[('patient_id', '=', patient_id)]"
+                                   options="{'no_create': True}"/>
+                            <field name="medical_record_id" 
+                                   domain="[('patient_id', '=', patient_id)]"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        
+                        <group name="date_info" string="Dates">
+                            <field name="billing_date"/>
+                            <field name="due_date"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Billing Lines" name="lines">
+                            <field name="line_ids">
+                                <list string="Services" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="service_type"/>
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="subtotal" sum="Subtotal"/>
+                                </list>
+                            </field>
+                            
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="subtotal" widget="monetary"/>
+                                <field name="discount_percent"/>
+                                <field name="discount_amount" widget="monetary"/>
+                                <field name="tax_percent"/>
+                                <field name="tax_amount" widget="monetary"/>
+                                <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="total_amount"/>
+                                </div>
+                                <field name="total_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Payment Information" name="payment">
+                            <group>
+                                <group string="Payment Details">
+                                    <field name="payment_method"/>
+                                    <field name="payment_status" widget="badge"/>
+                                    <field name="paid_amount" widget="monetary"/>
+                                    <field name="balance_amount" widget="monetary"/>
+                                </group>
+                                
+                                <group string="Additional Info">
+                                    <field name="notes" nolabel="1" 
+                                           placeholder="Additional notes..."/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Billing Search View -->
+    <record id="view_hospital_billing_search" model="ir.ui.view">
+        <field name="name">hospital.billing.search</field>
+        <field name="model">hospital.billing</field>
+        <field name="arch" type="xml">
+            <search string="Search Billings">
+                <field name="reference"/>
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                
+                <filter string="Draft" name="draft" 
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" 
+                        domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Paid" name="paid" 
+                        domain="[('state', '=', 'paid')]"/>
+                
+                <separator/>
+                
+                <filter string="Unpaid" name="unpaid" 
+                        domain="[('payment_status', '=', 'unpaid')]"/>
+                <filter string="Partially Paid" name="partial" 
+                        domain="[('payment_status', '=', 'partial')]"/>
+                <filter string="Fully Paid" name="fully_paid" 
+                        domain="[('payment_status', '=', 'paid')]"/>
+                
+                <separator/>
+                
+                <filter string="Today" name="today" 
+                        domain="[('billing_date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="This Month" name="this_month" 
+                        domain="[('billing_date', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-%d'))]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Patient" name="group_patient" 
+                            context="{'group_by': 'patient_id'}"/>
+                    <filter string="Doctor" name="group_doctor" 
+                            context="{'group_by': 'doctor_id'}"/>
+                    <filter string="Payment Status" name="group_payment_status" 
+                            context="{'group_by': 'payment_status'}"/>
+                    <filter string="Status" name="group_state" 
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Billing Date" name="group_date" 
+                            context="{'group_by': 'billing_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Billing Action -->
+    <record id="action_hospital_billing" model="ir.actions.act_window">
+        <field name="name">Billings</field>
+        <field name="res_model">hospital.billing</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_confirmed': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Billing
+            </p>
+            <p>
+                Manage patient billings and invoices.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_hospital_billing_root" 
+              name="Billing" 
+              parent="menu_hospital_root" 
+              sequence="40"/>
+    
+    <menuitem id="menu_hospital_billing" 
+              name="All Billings" 
+              parent="menu_hospital_billing_root" 
+              action="action_hospital_billing" 
+              sequence="10"/>
+</odoo>

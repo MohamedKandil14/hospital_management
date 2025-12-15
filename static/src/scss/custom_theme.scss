@@ -1,0 +1,815 @@
+/* ========================================
+   Hospital Management - Custom Theme (SCSS)
+   Author: Mohamed Kandil
+   Version: 1.0
+   ======================================== */
+
+// ========================================
+// VARIABLES
+// ========================================
+
+// Primary Colors
+$primary-color: #2ecc71;
+$primary-dark: #27ae60;
+$primary-light: #58d68d;
+$primary-lighter: #a9dfbf;
+
+// Secondary Colors
+$secondary-color: #3498db;
+$secondary-dark: #2980b9;
+$secondary-light: #5dade2;
+
+// Accent Colors
+$accent-color: #e74c3c;
+$success-color: #27ae60;
+$warning-color: #f39c12;
+$danger-color: #c0392b;
+$info-color: #3498db;
+
+// Neutral Colors
+$dark-bg: #2c3e50;
+$darker-bg: #1a252f;
+$light-bg: #ecf0f1;
+$lighter-bg: #f8f9fa;
+$white: #ffffff;
+$black: #000000;
+
+// Text Colors
+$text-dark: #2c3e50;
+$text-light: #7f8c8d;
+$text-muted: #95a5a6;
+
+// Border & Shadow
+$border-radius-sm: 5px;
+$border-radius: 8px;
+$border-radius-lg: 12px;
+$border-radius-xl: 15px;
+
+$box-shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.08);
+$box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+$box-shadow-lg: 0 5px 20px rgba(0, 0, 0, 0.15);
+$box-shadow-xl: 0 10px 40px rgba(0, 0, 0, 0.2);
+
+// Transitions
+$transition-fast: all 0.2s ease;
+$transition: all 0.3s ease;
+$transition-slow: all 0.5s ease;
+
+// Spacing
+$spacing-xs: 5px;
+$spacing-sm: 10px;
+$spacing: 15px;
+$spacing-lg: 20px;
+$spacing-xl: 25px;
+
+// ========================================
+// MIXINS
+// ========================================
+
+// Button Mixin
+@mixin button-style($bg-color, $hover-color: darken($bg-color, 10%)) {
+    background: linear-gradient(135deg, $bg-color 0%, darken($bg-color, 5%) 100%) !important;
+    border: none !important;
+    color: $white !important;
+    border-radius: $border-radius !important;
+    padding: 10px 20px !important;
+    font-weight: 600 !important;
+    transition: $transition !important;
+    box-shadow: 0 3px 8px rgba($bg-color, 0.3) !important;
+    cursor: pointer !important;
+
+    &:hover {
+        background: linear-gradient(135deg, $hover-color 0%, darken($hover-color, 5%) 100%) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 5px 15px rgba($bg-color, 0.4) !important;
+    }
+
+    &:active {
+        transform: translateY(0) !important;
+        box-shadow: 0 2px 5px rgba($bg-color, 0.3) !important;
+    }
+
+    &:focus {
+        outline: none !important;
+        box-shadow: 0 0 0 3px rgba($bg-color, 0.2) !important;
+    }
+}
+
+// Card Mixin
+@mixin card-style {
+    background-color: $white !important;
+    border-radius: $border-radius-lg !important;
+    box-shadow: $box-shadow !important;
+    padding: $spacing-lg !important;
+    transition: $transition !important;
+
+    &:hover {
+        box-shadow: $box-shadow-lg !important;
+        transform: translateY(-3px) !important;
+    }
+}
+
+// Gradient Background Mixin
+@mixin gradient-bg($color1, $color2, $direction: 135deg) {
+    background: linear-gradient($direction, $color1 0%, $color2 100%) !important;
+}
+
+// Text Truncate Mixin
+@mixin text-truncate {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+// Flexbox Center Mixin
+@mixin flex-center {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+// ========================================
+// 1. CUSTOM LOGO IN NAVBAR
+// ========================================
+
+.o_main_navbar {
+    .o_menu_brand {
+        // Hide default text
+        color: transparent !important;
+        font-size: 0 !important;
+        text-indent: -9999px !important;
+        overflow: hidden !important;
+        
+        // Add logo
+        background-image: url('/hospital_management/static/src/img/logo.png') !important;
+        background-size: contain !important;
+        background-repeat: no-repeat !important;
+        background-position: left center !important;
+        
+        // Size
+        width: 200px !important;
+        min-width: 200px !important;
+        height: 50px !important;
+        display: inline-block !important;
+        padding: 0 !important;
+        margin: 0 $spacing !important;
+
+        // Hide all inner elements
+        * {
+            display: none !important;
+        }
+
+        &::before,
+        &::after {
+            content: '' !important;
+            display: none !important;
+        }
+
+        &:hover {
+            background-color: transparent !important;
+        }
+    }
+}
+
+// ========================================
+// 2. TOP NAVIGATION BAR
+// ========================================
+
+.o_main_navbar {
+    @include gradient-bg($dark-bg, lighten($dark-bg, 5%));
+    border-bottom: 3px solid $primary-color !important;
+    box-shadow: $box-shadow !important;
+    padding: 0 $spacing !important;
+    min-height: 60px !important;
+
+    // Menu items
+    .o_menu_sections,
+    .o_menu_systray {
+        .dropdown > a {
+            color: $light-bg !important;
+            padding: $spacing $spacing-sm !important;
+            transition: $transition !important;
+            border-radius: $border-radius-sm !important;
+            margin: 0 3px !important;
+
+            &:hover {
+                background-color: rgba($primary-color, 0.2) !important;
+                color: $primary-color !important;
+                transform: translateY(-2px) !important;
+            }
+        }
+
+        .dropdown.show > a {
+            background-color: $primary-color !important;
+            color: $white !important;
+        }
+    }
+}
+
+// ========================================
+// 3. SIDE MENU
+// ========================================
+
+.o_action_manager {
+    .o_menu_sections {
+        @include gradient-bg(lighten($dark-bg, 5%), $dark-bg, 180deg);
+        padding: $spacing $spacing-sm !important;
+
+        .o_nav_entry {
+            color: $light-bg !important;
+            padding: 14px 18px !important;
+            margin: 6px 8px !important;
+            border-radius: $border-radius !important;
+            transition: $transition !important;
+            border-left: 3px solid transparent !important;
+            font-weight: 500 !important;
+
+            &:hover {
+                @include gradient-bg($primary-color, $primary-dark, 90deg);
+                color: $white !important;
+                transform: translateX(8px) !important;
+                border-left-color: $white !important;
+                box-shadow: 0 3px 10px rgba($primary-color, 0.3) !important;
+            }
+
+            &.active,
+            &.o_active {
+                background: $primary-dark !important;
+                color: $white !important;
+                border-left-color: $primary-light !important;
+                font-weight: 600 !important;
+            }
+
+            i,
+            .fa {
+                color: $primary-light !important;
+                margin-right: $spacing-sm !important;
+                font-size: 16px !important;
+            }
+        }
+    }
+}
+
+// ========================================
+// 4. BUTTONS
+// ========================================
+
+.btn-primary,
+.o_form_button_create,
+.oe_highlight {
+    @include button-style($primary-color, $primary-dark);
+}
+
+.btn-success {
+    @include button-style($success-color, darken($success-color, 10%));
+}
+
+.btn-info {
+    @include button-style($info-color, $secondary-dark);
+}
+
+.btn-warning {
+    @include button-style($warning-color, darken($warning-color, 10%));
+}
+
+.btn-danger {
+    @include button-style($danger-color, darken($danger-color, 10%));
+}
+
+.btn-secondary {
+    @include button-style(#95a5a6, #7f8c8d);
+}
+
+// ========================================
+// 5. FORMS & CARDS
+// ========================================
+
+.o_form_view {
+    @include gradient-bg($lighter-bg, darken($lighter-bg, 3%));
+}
+
+.o_form_sheet {
+    @include card-style;
+    margin: $spacing-lg auto !important;
+}
+
+.o_form_label {
+    color: $text-dark !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+// Input fields
+.o_field_widget {
+    input,
+    textarea,
+    select {
+        border: 2px solid darken($lighter-bg, 5%) !important;
+        border-radius: $border-radius !important;
+        transition: $transition !important;
+        padding: $spacing-sm $spacing !important;
+
+        &:focus {
+            border-color: $primary-color !important;
+            box-shadow: 0 0 0 3px rgba($primary-color, 0.1) !important;
+            outline: none !important;
+        }
+    }
+
+    &.o_required_modifier {
+        input,
+        textarea {
+            border-left: 3px solid $primary-color !important;
+        }
+    }
+}
+
+// ========================================
+// 6. LIST/TABLE VIEW
+// ========================================
+
+.o_list_table,
+.o_list_view {
+    thead {
+        @include gradient-bg($dark-bg, lighten($dark-bg, 5%));
+        color: $white !important;
+
+        th {
+            color: $white !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            font-size: 12px !important;
+            letter-spacing: 0.5px !important;
+            padding: $spacing $spacing-sm !important;
+            border: none !important;
+        }
+    }
+
+    tbody {
+        tr {
+            transition: $transition !important;
+            border-bottom: 1px solid darken($lighter-bg, 5%) !important;
+
+            &:hover {
+                background-color: rgba($primary-color, 0.08) !important;
+                cursor: pointer !important;
+                transform: scale(1.01) !important;
+            }
+
+            &:nth-child(even) {
+                background-color: $lighter-bg !important;
+            }
+
+            &.o_selected_row,
+            &.o_data_row.o_selected_row {
+                background-color: rgba($primary-color, 0.15) !important;
+                border-left: 4px solid $primary-color !important;
+            }
+        }
+    }
+}
+
+// ========================================
+// 7. KANBAN VIEW
+// ========================================
+
+.o_kanban_view {
+    .o_kanban_record {
+        border-radius: $border-radius-lg !important;
+        box-shadow: $box-shadow-sm !important;
+        transition: $transition !important;
+        border: 1px solid darken($lighter-bg, 5%) !important;
+        background: $white !important;
+
+        &:hover {
+            transform: translateY(-8px) !important;
+            box-shadow: 0 8px 25px rgba($primary-color, 0.25) !important;
+            border-color: $primary-color !important;
+        }
+    }
+
+    .o_kanban_header {
+        @include gradient-bg($light-bg, darken($light-bg, 10%));
+        border-radius: $border-radius $border-radius 0 0 !important;
+        padding: $spacing-sm !important;
+        font-weight: 600 !important;
+    }
+}
+
+// ========================================
+// 8. STATUS BAR
+// ========================================
+
+.o_form_statusbar {
+    background-color: $lighter-bg !important;
+    border-bottom: 2px solid darken($lighter-bg, 5%) !important;
+    padding: $spacing-sm $spacing-lg !important;
+
+    .o_statusbar_status {
+        border-radius: $border-radius !important;
+        padding: 8px 16px !important;
+        margin: 0 $spacing-xs !important;
+        transition: $transition !important;
+
+        &.btn-primary,
+        &.o_arrow_button.btn-primary {
+            background: $primary-color !important;
+            border-color: $primary-dark !important;
+            color: $white !important;
+        }
+
+        &:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: $box-shadow-sm !important;
+        }
+    }
+}
+
+// ========================================
+// 9. BADGES & TAGS
+// ========================================
+
+.badge,
+.o_tag {
+    border-radius: $border-radius-xl !important;
+    padding: $spacing-xs $spacing-sm !important;
+    font-weight: 600 !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+// Badge colors
+$badge-colors: (
+    'primary': $primary-color,
+    'success': $success-color,
+    'info': $info-color,
+    'warning': $warning-color,
+    'danger': $danger-color,
+    'secondary': #95a5a6
+);
+
+@each $name, $color in $badge-colors {
+    .badge-#{$name} {
+        background-color: $color !important;
+        @if $name == 'warning' {
+            color: $white !important;
+        }
+    }
+}
+
+// ========================================
+// 10. CHATTER
+// ========================================
+
+.o_chatter {
+    background-color: $lighter-bg !important;
+    border-radius: $border-radius-lg !important;
+    padding: $spacing-lg !important;
+    margin-top: $spacing-lg !important;
+
+    .o_Message {
+        background-color: $white !important;
+        border-left: 4px solid $primary-color !important;
+        border-radius: $border-radius !important;
+        padding: $spacing !important;
+        margin-bottom: $spacing-sm !important;
+        box-shadow: $box-shadow-sm !important;
+
+        &:hover {
+            box-shadow: $box-shadow !important;
+        }
+    }
+}
+
+// ========================================
+// 11. DASHBOARD CARDS
+// ========================================
+
+.o_hospital_dashboard {
+    .card {
+        border: none !important;
+        border-radius: $border-radius-lg !important;
+        box-shadow: $box-shadow !important;
+        transition: $transition !important;
+        overflow: hidden !important;
+
+        &:hover {
+            transform: translateY(-8px) !important;
+            box-shadow: $box-shadow-lg !important;
+        }
+
+        .card-header {
+            @include gradient-bg(lighten($dark-bg, 5%), $dark-bg);
+            color: $white !important;
+            border: none !important;
+            padding: $spacing $spacing-lg !important;
+        }
+    }
+
+    // Border colors
+    $border-colors: (
+        'primary': $primary-color,
+        'success': $success-color,
+        'info': $info-color,
+        'warning': $warning-color,
+        'danger': $danger-color
+    );
+
+    @each $name, $color in $border-colors {
+        .border-left-#{$name} {
+            border-left: 5px solid $color !important;
+        }
+    }
+}
+
+// ========================================
+// 12. SCROLLBAR
+// ========================================
+
+// Webkit browsers
+::-webkit-scrollbar {
+    width: 12px !important;
+    height: 12px !important;
+}
+
+::-webkit-scrollbar-track {
+    background: $light-bg !important;
+    border-radius: $border-radius-lg !important;
+}
+
+::-webkit-scrollbar-thumb {
+    @include gradient-bg($primary-color, $primary-dark);
+    border-radius: $border-radius-lg !important;
+    border: 2px solid $light-bg !important;
+
+    &:hover {
+        @include gradient-bg($primary-dark, darken($primary-dark, 10%));
+    }
+}
+
+// Firefox
+* {
+    scrollbar-width: thin !important;
+    scrollbar-color: $primary-color $light-bg !important;
+}
+
+// ========================================
+// 13. SEARCH & FILTERS
+// ========================================
+
+.o_searchview {
+    border-radius: $border-radius !important;
+    border: 2px solid darken($lighter-bg, 5%) !important;
+    transition: $transition !important;
+
+    &:focus-within {
+        border-color: $primary-color !important;
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.1) !important;
+    }
+
+    .o_searchview_input,
+    .o_searchview_input_container input {
+        border: none !important;
+        padding: $spacing-sm $spacing !important;
+    }
+
+    .o_searchview_facet {
+        background-color: $primary-color !important;
+        color: $white !important;
+        border-radius: $border-radius-xl !important;
+        padding: $spacing-xs $spacing-sm !important;
+    }
+}
+
+// ========================================
+// 14. MODALS & DIALOGS
+// ========================================
+
+.modal-content {
+    border-radius: $border-radius-lg !important;
+    border: none !important;
+    box-shadow: $box-shadow-xl !important;
+
+    .modal-header {
+        @include gradient-bg($primary-color, $primary-dark);
+        color: $white !important;
+        border-radius: $border-radius-lg $border-radius-lg 0 0 !important;
+        border: none !important;
+        padding: $spacing-lg !important;
+    }
+
+    .modal-footer {
+        border-top: 2px solid darken($lighter-bg, 5%) !important;
+        padding: $spacing $spacing-lg !important;
+    }
+}
+
+// ========================================
+// 15. NOTIFICATIONS & ALERTS
+// ========================================
+
+.o_notification {
+    border-radius: $border-radius-lg !important;
+    box-shadow: $box-shadow-lg !important;
+    border-left: 5px solid $primary-color !important;
+
+    &.o_notification_success {
+        border-left-color: $success-color !important;
+    }
+
+    &.o_notification_warning {
+        border-left-color: $warning-color !important;
+    }
+
+    &.o_notification_danger {
+        border-left-color: $danger-color !important;
+    }
+}
+
+// ========================================
+// 16. ANIMATIONS
+// ========================================
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.o_content,
+.o_form_view {
+    animation: fadeIn 0.5s ease-in-out !important;
+}
+
+.o_action_manager .o_menu_sections .o_nav_entry {
+    animation: slideIn 0.3s ease-in-out !important;
+}
+
+// ========================================
+// 17. UTILITY CLASSES
+// ========================================
+
+// Text colors
+$text-colors: (
+    'primary': $primary-color,
+    'success': $success-color,
+    'info': $info-color,
+    'warning': $warning-color,
+    'danger': $danger-color,
+    'dark': $text-dark,
+    'light': $text-light,
+    'muted': $text-muted
+);
+
+@each $name, $color in $text-colors {
+    .text-#{$name} {
+        color: $color !important;
+    }
+}
+
+// Background colors
+@each $name, $color in $text-colors {
+    .bg-#{$name} {
+        background-color: $color !important;
+    }
+}
+
+// Spacing utilities
+$spacings: (
+    'xs': $spacing-xs,
+    'sm': $spacing-sm,
+    'md': $spacing,
+    'lg': $spacing-lg,
+    'xl': $spacing-xl
+);
+
+@each $name, $size in $spacings {
+    .p-#{$name} { padding: $size !important; }
+    .pt-#{$name} { padding-top: $size !important; }
+    .pr-#{$name} { padding-right: $size !important; }
+    .pb-#{$name} { padding-bottom: $size !important; }
+    .pl-#{$name} { padding-left: $size !important; }
+    .px-#{$name} { padding-left: $size !important; padding-right: $size !important; }
+    .py-#{$name} { padding-top: $size !important; padding-bottom: $size !important; }
+    
+    .m-#{$name} { margin: $size !important; }
+    .mt-#{$name} { margin-top: $size !important; }
+    .mr-#{$name} { margin-right: $size !important; }
+    .mb-#{$name} { margin-bottom: $size !important; }
+    .ml-#{$name} { margin-left: $size !important; }
+    .mx-#{$name} { margin-left: $size !important; margin-right: $size !important; }
+    .my-#{$name} { margin-top: $size !important; margin-bottom: $size !important; }
+}
+
+// ========================================
+// 18. RESPONSIVE DESIGN
+// ========================================
+
+@media (max-width: 768px) {
+    .o_form_sheet {
+        padding: $spacing !important;
+        margin: $spacing-sm !important;
+    }
+    
+    .o_main_navbar .o_menu_brand {
+        width: 150px !important;
+        height: 40px !important;
+    }
+    
+    .btn {
+        padding: 8px 15px !important;
+        font-size: 13px !important;
+    }
+
+    .o_hospital_dashboard .card {
+        margin-bottom: $spacing !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .o_main_navbar .o_menu_brand {
+        width: 120px !important;
+        height: 35px !important;
+    }
+
+    .o_form_sheet {
+        padding: $spacing-sm !important;
+    }
+}
+
+// ========================================
+// 19. PRINT STYLES
+// ========================================
+
+@media print {
+    .o_main_navbar,
+    .o_menu_sections,
+    .o_form_statusbar,
+    .oe_chatter {
+        display: none !important;
+    }
+    
+    .o_form_sheet {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+
+    body {
+        background: $white !important;
+    }
+}
+
+// ========================================
+// 20. DARK MODE SUPPORT (Optional)
+// ========================================
+
+@media (prefers-color-scheme: dark) {
+    // Uncomment to enable dark mode
+    /*
+    body {
+        background-color: $darker-bg !important;
+        color: $light-bg !important;
+    }
+    
+    .o_form_sheet {
+        background-color: $dark-bg !important;
+        color: $light-bg !important;
+    }
+
+    .o_list_table tbody tr:nth-child(even) {
+        background-color: lighten($dark-bg, 5%) !important;
+    }
+    */
+}
+
+// ========================================
+// END OF SCSS THEME
+// ========================================

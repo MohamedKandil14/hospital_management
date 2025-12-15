@@ -1,0 +1,95 @@
+.o_hospital_dashboard {
+    background-color: #f8f9fc;
+    min-height: 100vh;
+}
+
+.o_hospital_dashboard .card {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.o_hospital_dashboard .card-header {
+    background-color: #f8f9fc;
+    border-bottom: 1px solid #e3e6f0;
+}
+
+.o_hospital_dashboard .border-left-primary {
+    border-left: 0.25rem solid #4e73df !important;
+}
+
+.o_hospital_dashboard .border-left-success {
+    border-left: 0.25rem solid #1cc88a !important;
+}
+
+.o_hospital_dashboard .border-left-info {
+    border-left: 0.25rem solid #36b9cc !important;
+}
+
+.o_hospital_dashboard .border-left-warning {
+    border-left: 0.25rem solid #f6c23e !important;
+}
+
+.o_hospital_dashboard .border-left-danger {
+    border-left: 0.25rem solid #e74a3b !important;
+}
+
+.o_hospital_dashboard .border-left-secondary {
+    border-left: 0.25rem solid #858796 !important;
+}
+
+.o_hospital_dashboard .text-xs {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.o_hospital_dashboard .shadow {
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.o_hospital_dashboard .text-gray-300 {
+    color: #dddfeb !important;
+}
+
+.o_hospital_dashboard .text-gray-800 {
+    color: #5a5c69 !important;
+}
+
+.o_hospital_dashboard .card:hover {
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+    box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.25) !important;
+}
+
+.o_hospital_dashboard .chart-container {
+    position: relative;
+}
+
+.o_hospital_dashboard h2 {
+    color: #5a5c69;
+    font-weight: 700;
+}
+
+.o_hospital_dashboard .text-primary {
+    color: #4e73df !important;
+}
+
+.o_hospital_dashboard .text-success {
+    color: #1cc88a !important;
+}
+
+.o_hospital_dashboard .text-info {
+    color: #36b9cc !important;
+}
+
+.o_hospital_dashboard .text-warning {
+    color: #f6c23e !important;
+}
+
+.o_hospital_dashboard .text-danger {
+    color: #e74a3b !important;
+}
+
+.o_hospital_dashboard .text-secondary {
+    color: #858796 !important;
+}

@@ -9,4 +9,54 @@
         <field name="number_next">1</field>
         <field name="number_increment">1</field>
     </record>
+
+    <!-- Appointment Reference Sequence -->
+    <record id="seq_hospital_appointment" model="ir.sequence">
+        <field name="name">Hospital Appointment Reference</field>
+        <field name="code">hospital.appointment</field>
+        <field name="prefix">APT</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+    <!-- Medical Record Sequence -->
+    <record id="seq_hospital_medical_record" model="ir.sequence">
+        <field name="name">Hospital Medical Record Reference</field>
+        <field name="code">hospital.medical.record</field>
+        <field name="prefix">MR</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+    <!-- Billing Sequence -->
+    <record id="seq_hospital_billing" model="ir.sequence">
+        <field name="name">Hospital Billing Reference</field>
+        <field name="code">hospital.billing</field>
+        <field name="prefix">INV</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+    <!-- Prescription Sequence -->
+    <record id="seq_hospital_prescription" model="ir.sequence">
+        <field name="name">Hospital Prescription Reference</field>
+        <field name="code">hospital.prescription</field>
+        <field name="prefix">RX</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+    <!-- Lab Test Sequence -->
+    <record id="seq_hospital_lab_test" model="ir.sequence">
+        <field name="name">Hospital Lab Test Reference</field>
+        <field name="code">hospital.lab.test</field>
+        <field name="prefix">LAB</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
 </odoo>

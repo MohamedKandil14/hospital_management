@@ -1,0 +1,717 @@
+/* ========================================
+   Hospital Management - Custom Theme
+   Author: Mohamed Kandil
+   Version: 1.0
+   ======================================== */
+
+/* ========================================
+   CSS Variables (Color Scheme)
+   ======================================== */
+:root {
+    /* Primary Colors */
+    --primary-color: #2ecc71;
+    --primary-dark: #27ae60;
+    --primary-light: #58d68d;
+    
+    /* Secondary Colors */
+    --secondary-color: #3498db;
+    --secondary-dark: #2980b9;
+    
+    /* Accent Colors */
+    --accent-color: #e74c3c;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --danger-color: #c0392b;
+    --info-color: #3498db;
+    
+    /* Neutral Colors */
+    --dark-bg: #2c3e50;
+    --darker-bg: #1a252f;
+    --light-bg: #ecf0f1;
+    --white: #ffffff;
+    --text-dark: #2c3e50;
+    --text-light: #7f8c8d;
+    
+    /* Effects */
+    --border-radius: 8px;
+    --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+/* ========================================
+   1. CUSTOM LOGO IN NAVBAR
+   ======================================== */
+
+/* إخفاء النص الافتراضي وإظهار اللوجو */
+.o_main_navbar .o_menu_brand {
+    /* إخفاء النص */
+    color: transparent !important;
+    font-size: 0 !important;
+    text-indent: -9999px !important;
+    overflow: hidden !important;
+    
+    /* إضافة اللوجو */
+    background-image: url('/hospital_management/static/src/img/logo.png') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: left center !important;
+    
+    /* حجم اللوجو */
+    width: 200px !important;
+    min-width: 200px !important;
+    height: 50px !important;
+    display: inline-block !important;
+    padding: 0 !important;
+    margin: 0 15px !important;
+}
+
+/* إخفاء أي عناصر داخلية */
+.o_main_navbar .o_menu_brand * {
+    display: none !important;
+}
+
+.o_main_navbar .o_menu_brand::before,
+.o_main_navbar .o_menu_brand::after {
+    content: '' !important;
+    display: none !important;
+}
+
+/* إزالة أي Hover Effects على اللوجو */
+.o_main_navbar .o_menu_brand:hover {
+    background-color: transparent !important;
+}
+
+/* ========================================
+   2. TOP NAVIGATION BAR (الشريط العلوي)
+   ======================================== */
+.o_main_navbar {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
+    border-bottom: 3px solid var(--primary-color) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15) !important;
+    padding: 0 15px !important;
+    min-height: 60px !important;
+}
+
+/* أيقونات الشريط العلوي */
+.o_main_navbar .o_menu_sections .dropdown > a,
+.o_main_navbar .o_menu_systray .dropdown > a {
+    color: #ecf0f1 !important;
+    padding: 15px 12px !important;
+    transition: var(--transition) !important;
+    border-radius: 5px !important;
+    margin: 0 3px !important;
+}
+
+.o_main_navbar .o_menu_sections .dropdown > a:hover,
+.o_main_navbar .o_menu_systray .dropdown > a:hover {
+    background-color: rgba(46, 204, 113, 0.2) !important;
+    color: var(--primary-color) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Active Menu Item */
+.o_main_navbar .o_menu_sections .dropdown.show > a {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* ========================================
+   3. SIDE MENU / APP SWITCHER (القائمة الجانبية)
+   ======================================== */
+.o_action_manager .o_menu_sections {
+    background: linear-gradient(180deg, #34495e 0%, #2c3e50 100%) !important;
+    padding: 15px 10px !important;
+}
+
+/* Menu Items */
+.o_action_manager .o_menu_sections .o_nav_entry {
+    color: #ecf0f1 !important;
+    padding: 14px 18px !important;
+    margin: 6px 8px !important;
+    border-radius: var(--border-radius) !important;
+    transition: var(--transition) !important;
+    border-left: 3px solid transparent !important;
+    font-weight: 500 !important;
+}
+
+/* Hover Effect */
+.o_action_manager .o_menu_sections .o_nav_entry:hover {
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+    color: white !important;
+    transform: translateX(8px) !important;
+    border-left-color: white !important;
+    box-shadow: 0 3px 10px rgba(46, 204, 113, 0.3) !important;
+}
+
+/* Active Menu Item */
+.o_action_manager .o_menu_sections .o_nav_entry.active,
+.o_action_manager .o_menu_sections .o_nav_entry.o_active {
+    background: var(--primary-dark) !important;
+    color: white !important;
+    border-left-color: var(--primary-light) !important;
+    font-weight: 600 !important;
+}
+
+/* Menu Icons */
+.o_action_manager .o_menu_sections .o_nav_entry i,
+.o_action_manager .o_menu_sections .o_nav_entry .fa {
+    color: var(--primary-light) !important;
+    margin-right: 10px !important;
+    font-size: 16px !important;
+}
+
+/* ========================================
+   4. BUTTONS (الأزرار)
+   ======================================== */
+
+/* Primary Button */
+.btn-primary,
+.o_form_button_create,
+.oe_highlight {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+    border: none !important;
+    color: white !important;
+    border-radius: var(--border-radius) !important;
+    padding: 10px 20px !important;
+    font-weight: 600 !important;
+    transition: var(--transition) !important;
+    box-shadow: 0 3px 8px rgba(46, 204, 113, 0.3) !important;
+}
+
+.btn-primary:hover,
+.o_form_button_create:hover,
+.oe_highlight:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, #1e8449 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4) !important;
+}
+
+/* Success Button */
+.btn-success {
+    background: linear-gradient(135deg, var(--success-color) 0%, #1e8449 100%) !important;
+    border: none !important;
+    color: white !important;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #1e8449 0%, #186a3b 100%) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Info Button */
+.btn-info {
+    background: linear-gradient(135deg, var(--info-color) 0%, var(--secondary-dark) 100%) !important;
+    border: none !important;
+    color: white !important;
+}
+
+.btn-info:hover {
+    background: linear-gradient(135deg, var(--secondary-dark) 0%, #1f618d 100%) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Warning Button */
+.btn-warning {
+    background: linear-gradient(135deg, var(--warning-color) 0%, #e67e22 100%) !important;
+    border: none !important;
+    color: white !important;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e67e22 0%, #d35400 100%) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Danger Button */
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger-color) 0%, #922b21 100%) !important;
+    border: none !important;
+    color: white !important;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #922b21 0%, #78281f 100%) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Secondary Button */
+.btn-secondary {
+    background-color: #95a5a6 !important;
+    border: none !important;
+    color: white !important;
+}
+
+.btn-secondary:hover {
+    background-color: #7f8c8d !important;
+    transform: translateY(-2px) !important;
+}
+
+/* ========================================
+   5. FORMS & CARDS (النماذج والكروت)
+   ======================================== */
+
+/* Form View Background */
+.o_form_view {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+}
+
+/* Form Sheet */
+.o_form_sheet {
+    background-color: white !important;
+    border-radius: 12px !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08) !important;
+    padding: 25px !important;
+    margin: 20px auto !important;
+}
+
+/* Form Labels */
+.o_form_label {
+    color: var(--text-dark) !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* Input Fields */
+.o_field_widget input,
+.o_field_widget textarea,
+.o_field_widget select {
+    border: 2px solid #e9ecef !important;
+    border-radius: var(--border-radius) !important;
+    transition: var(--transition) !important;
+    padding: 10px 15px !important;
+}
+
+.o_field_widget input:focus,
+.o_field_widget textarea:focus,
+.o_field_widget select:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1) !important;
+    outline: none !important;
+}
+
+/* Required Fields */
+.o_field_widget.o_required_modifier input,
+.o_field_widget.o_required_modifier textarea {
+    border-left: 3px solid var(--primary-color) !important;
+}
+
+/* ========================================
+   6. LIST/TABLE VIEW (عرض القوائم)
+   ======================================== */
+
+/* Table Header */
+.o_list_table thead,
+.o_list_view thead {
+    background: linear-gradient(135deg, var(--dark-bg) 0%, #34495e 100%) !important;
+    color: white !important;
+}
+
+.o_list_table thead th,
+.o_list_view thead th {
+    color: white !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    font-size: 12px !important;
+    letter-spacing: 0.5px !important;
+    padding: 15px 10px !important;
+    border: none !important;
+}
+
+/* Table Rows */
+.o_list_table tbody tr,
+.o_list_view tbody tr {
+    transition: var(--transition) !important;
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+.o_list_table tbody tr:hover,
+.o_list_view tbody tr:hover {
+    background-color: rgba(46, 204, 113, 0.08) !important;
+    cursor: pointer !important;
+    transform: scale(1.01) !important;
+}
+
+/* Alternate Row Colors */
+.o_list_table tbody tr:nth-child(even),
+.o_list_view tbody tr:nth-child(even) {
+    background-color: #f8f9fa !important;
+}
+
+/* Selected Row */
+.o_list_table tbody tr.o_selected_row,
+.o_list_view tbody tr.o_data_row.o_selected_row {
+    background-color: rgba(46, 204, 113, 0.15) !important;
+    border-left: 4px solid var(--primary-color) !important;
+}
+
+/* ========================================
+   7. KANBAN VIEW (عرض كانبان)
+   ======================================== */
+
+/* Kanban Cards */
+.o_kanban_view .o_kanban_record {
+    border-radius: 10px !important;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08) !important;
+    transition: var(--transition) !important;
+    border: 1px solid #e9ecef !important;
+    background: white !important;
+}
+
+.o_kanban_view .o_kanban_record:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 8px 25px rgba(46, 204, 113, 0.25) !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Kanban Column Headers */
+.o_kanban_header {
+    background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%) !important;
+    border-radius: 8px 8px 0 0 !important;
+    padding: 12px !important;
+    font-weight: 600 !important;
+}
+
+/* ========================================
+   8. STATUS BAR (شريط الحالة)
+   ======================================== */
+
+/* Statusbar */
+.o_form_statusbar {
+    background-color: #f8f9fa !important;
+    border-bottom: 2px solid #e9ecef !important;
+    padding: 12px 20px !important;
+}
+
+/* Status Buttons */
+.o_statusbar_status {
+    border-radius: var(--border-radius) !important;
+    padding: 8px 16px !important;
+    margin: 0 5px !important;
+    transition: var(--transition) !important;
+}
+
+.o_statusbar_status.btn-primary,
+.o_statusbar_status.o_arrow_button.btn-primary {
+    background: var(--primary-color) !important;
+    border-color: var(--primary-dark) !important;
+    color: white !important;
+}
+
+.o_statusbar_status:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ========================================
+   9. BADGES & TAGS (الشارات)
+   ======================================== */
+
+.badge,
+.o_tag {
+    border-radius: 15px !important;
+    padding: 5px 12px !important;
+    font-weight: 600 !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.badge-primary { background-color: var(--primary-color) !important; }
+.badge-success { background-color: var(--success-color) !important; }
+.badge-info { background-color: var(--info-color) !important; }
+.badge-warning { background-color: var(--warning-color) !important; color: white !important; }
+.badge-danger { background-color: var(--danger-color) !important; }
+.badge-secondary { background-color: #95a5a6 !important; }
+
+/* ========================================
+   10. CHATTER (المحادثات والأنشطة)
+   ======================================== */
+
+.o_chatter {
+    background-color: #f8f9fa !important;
+    border-radius: 10px !important;
+    padding: 20px !important;
+    margin-top: 20px !important;
+}
+
+.o_Message {
+    background-color: white !important;
+    border-left: 4px solid var(--primary-color) !important;
+    border-radius: var(--border-radius) !important;
+    padding: 15px !important;
+    margin-bottom: 12px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+.o_Message:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ========================================
+   11. DASHBOARD CARDS
+   ======================================== */
+
+.o_hospital_dashboard .card {
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1) !important;
+    transition: var(--transition) !important;
+    overflow: hidden !important;
+}
+
+.o_hospital_dashboard .card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+.o_hospital_dashboard .card-header {
+    background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%) !important;
+    color: white !important;
+    border: none !important;
+    padding: 15px 20px !important;
+}
+
+.o_hospital_dashboard .border-left-primary {
+    border-left: 5px solid var(--primary-color) !important;
+}
+
+.o_hospital_dashboard .border-left-success {
+    border-left: 5px solid var(--success-color) !important;
+}
+
+.o_hospital_dashboard .border-left-info {
+    border-left: 5px solid var(--info-color) !important;
+}
+
+.o_hospital_dashboard .border-left-warning {
+    border-left: 5px solid var(--warning-color) !important;
+}
+
+.o_hospital_dashboard .border-left-danger {
+    border-left: 5px solid var(--danger-color) !important;
+}
+
+/* ========================================
+   12. SCROLLBAR (شريط التمرير)
+   ======================================== */
+
+/* Webkit Browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: 12px !important;
+    height: 12px !important;
+}
+
+::-webkit-scrollbar-track {
+    background: #ecf0f1 !important;
+    border-radius: 10px !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+    border-radius: 10px !important;
+    border: 2px solid #ecf0f1 !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, #1e8449 100%) !important;
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin !important;
+    scrollbar-color: var(--primary-color) #ecf0f1 !important;
+}
+
+/* ========================================
+   13. SEARCH & FILTERS
+   ======================================== */
+
+.o_searchview {
+    border-radius: var(--border-radius) !important;
+    border: 2px solid #e9ecef !important;
+    transition: var(--transition) !important;
+}
+
+.o_searchview:focus-within {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1) !important;
+}
+
+.o_searchview_input,
+.o_searchview .o_searchview_input_container input {
+    border: none !important;
+    padding: 10px 15px !important;
+}
+
+.o_searchview_facet {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border-radius: 15px !important;
+    padding: 5px 12px !important;
+}
+
+/* ========================================
+   14. MODALS & DIALOGS (النوافذ المنبثقة)
+   ======================================== */
+
+.modal-content {
+    border-radius: 12px !important;
+    border: none !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+    color: white !important;
+    border-radius: 12px 12px 0 0 !important;
+    border: none !important;
+    padding: 20px !important;
+}
+
+.modal-footer {
+    border-top: 2px solid #e9ecef !important;
+    padding: 15px 20px !important;
+}
+
+/* ========================================
+   15. NOTIFICATIONS & ALERTS
+   ======================================== */
+
+.o_notification {
+    border-radius: 10px !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15) !important;
+    border-left: 5px solid var(--primary-color) !important;
+}
+
+.o_notification.o_notification_success {
+    border-left-color: var(--success-color) !important;
+}
+
+.o_notification.o_notification_warning {
+    border-left-color: var(--warning-color) !important;
+}
+
+.o_notification.o_notification_danger {
+    border-left-color: var(--danger-color) !important;
+}
+
+/* ========================================
+   16. ANIMATIONS (الحركات)
+   ======================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.o_content,
+.o_form_view {
+    animation: fadeIn 0.5s ease-in-out !important;
+}
+
+.o_action_manager .o_menu_sections .o_nav_entry {
+    animation: slideIn 0.3s ease-in-out !important;
+}
+
+/* ========================================
+   17. UTILITY CLASSES
+   ======================================== */
+
+.text-primary { color: var(--primary-color) !important; }
+.text-success { color: var(--success-color) !important; }
+.text-info { color: var(--info-color) !important; }
+.text-warning { color: var(--warning-color) !important; }
+.text-danger { color: var(--danger-color) !important; }
+
+.bg-primary { background-color: var(--primary-color) !important; }
+.bg-success { background-color: var(--success-color) !important; }
+.bg-info { background-color: var(--info-color) !important; }
+.bg-warning { background-color: var(--warning-color) !important; }
+.bg-danger { background-color: var(--danger-color) !important; }
+
+/* ========================================
+   18. RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+    .o_form_sheet {
+        padding: 15px !important;
+        margin: 10px !important;
+    }
+    
+    .o_main_navbar .o_menu_brand {
+        width: 150px !important;
+        height: 40px !important;
+    }
+    
+    .btn {
+        padding: 8px 15px !important;
+        font-size: 13px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .o_main_navbar .o_menu_brand {
+        width: 120px !important;
+        height: 35px !important;
+    }
+}
+
+/* ========================================
+   19. PRINT STYLES
+   ======================================== */
+
+@media print {
+    .o_main_navbar,
+    .o_menu_sections,
+    .o_form_statusbar,
+    .oe_chatter {
+        display: none !important;
+    }
+    
+    .o_form_sheet {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+}
+
+/* ========================================
+   20. DARK MODE SUPPORT (Optional)
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+    /* Uncomment to enable dark mode
+    body {
+        background-color: #1a252f !important;
+        color: #ecf0f1 !important;
+    }
+    
+    .o_form_sheet {
+        background-color: #2c3e50 !important;
+        color: #ecf0f1 !important;
+    }
+    */
+}
+
+/* ========================================
+   END OF CUSTOM THEME
+   ======================================== */

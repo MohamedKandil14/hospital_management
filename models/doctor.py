@@ -23,6 +23,7 @@ class HospitalDoctor(models.Model):
             ('neurology', 'Neurology'),
             ('orthopedics', 'Orthopedics'),
             ('general', 'General Medicine'),
+            ('pediatric', 'Pediatrics'),
         ],
         string='Specialty',
         default='general',
@@ -69,6 +70,18 @@ class HospitalDoctor(models.Model):
         help='List of patients assigned to this doctor'
     )
     
+    # Relation with Appointments (One2many)
+    appointment_ids = fields.One2many(
+        comodel_name='hospital.appointment',
+        inverse_name='doctor_id',
+        string='Appointments'
+    )
+    
+    appointment_count = fields.Integer(
+        string='Appointments',
+        compute='_compute_appointment_count'
+    )
+    
     # Computed Field
     patient_count = fields.Integer(
         string='Number of Patients',
@@ -86,6 +99,12 @@ class HospitalDoctor(models.Model):
         """Compute total number of patients"""
         for record in self:
             record.patient_count = len(record.patient_ids)
+    
+    @api.depends('appointment_ids')
+    def _compute_appointment_count(self):
+        """Compute total number of appointments"""
+        for record in self:
+            record.appointment_count = len(record.appointment_ids)
     
     @api.depends('patient_count', 'max_patients')
     def _compute_availability(self):

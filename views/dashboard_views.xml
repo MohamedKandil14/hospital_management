@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dashboard Form View -->
+    <record id="view_hospital_dashboard_form" model="ir.ui.view">
+        <field name="name">hospital.dashboard.form</field>
+        <field name="model">hospital.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Hospital Dashboard" create="false" edit="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <i class="fa fa-dashboard"/> Hospital Analytics Dashboard
+                        </h1>
+                    </div>
+                    
+                    <!-- Date Filters -->
+                    <group>
+                        <group>
+                            <field name="date_from"/>
+                        </group>
+                        <group>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <!-- KPIs Tab -->
+                        <page string="📊 Key Performance Indicators" name="kpis">
+                            <group>
+                                <group string="📈 Patient Statistics">
+                                    <button name="action_view_patients" 
+                                            type="object" 
+                                            class="oe_link">
+                                        <field name="total_patients" 
+                                               widget="statinfo" 
+                                               string="Total Patients"
+                                               readonly="1"/>
+                                    </button>
+                                    
+                                    <field name="new_patients" 
+                                           widget="statinfo" 
+                                           string="New Patients (Period)"
+                                           readonly="1"/>
+                                    
+                                    <field name="male_patients" 
+                                           widget="statinfo" 
+                                           string="Male Patients"
+                                           readonly="1"/>
+                                    
+                                    <field name="female_patients" 
+                                           widget="statinfo" 
+                                           string="Female Patients"
+                                           readonly="1"/>
+                                </group>
+                                
+                                <group string="👨‍⚕️ Doctor Statistics">
+                                    <field name="total_doctors" 
+                                           widget="statinfo" 
+                                           string="Active Doctors"
+                                           readonly="1"/>
+                                </group>
+                            </group>
+                            
+                            <group>
+                                <group string="📅 Appointment Statistics">
+                                    <button name="action_view_appointments" 
+                                            type="object" 
+                                            class="oe_link">
+                                        <field name="appointments_today" 
+                                               widget="statinfo" 
+                                               string="Today's Appointments"
+                                               readonly="1"/>
+                                    </button>
+                                    
+                                    <field name="appointments_period" 
+                                           widget="statinfo" 
+                                           string="Period Appointments"
+                                           readonly="1"/>
+                                    
+                                    <field name="draft_appointments" 
+                                           widget="statinfo" 
+                                           string="Draft"
+                                           readonly="1"/>
+                                    
+                                    <field name="confirmed_appointments" 
+                                           widget="statinfo" 
+                                           string="Confirmed"
+                                           readonly="1"/>
+                                    
+                                    <field name="done_appointments" 
+                                           widget="statinfo" 
+                                           string="Completed"
+                                           readonly="1"/>
+                                    
+                                    <field name="cancelled_appointments" 
+                                           widget="statinfo" 
+                                           string="Cancelled"
+                                           readonly="1"/>
+                                </group>
+                                
+                                <group string="🔬 Lab Test Statistics">
+                                    <button name="action_view_lab_tests" 
+                                            type="object" 
+                                            class="oe_link">
+                                        <field name="pending_lab_tests" 
+                                               widget="statinfo" 
+                                               string="Pending Tests"
+                                               readonly="1"/>
+                                    </button>
+                                </group>
+                            </group>
+                            
+                            <group>
+                                <group string="💰 Financial Statistics">
+                                    <button name="action_view_billings" 
+                                            type="object" 
+                                            class="oe_link">
+                                        <field name="total_revenue" 
+                                               widget="monetary" 
+                                               string="Total Revenue"
+                                               readonly="1"/>
+                                    </button>
+                                    
+                                    <field name="total_paid" 
+                                           widget="monetary" 
+                                           string="Paid Amount"
+                                           readonly="1"/>
+                                    
+                                    <field name="total_pending" 
+                                           widget="monetary" 
+                                           string="Pending Amount"
+                                           readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <!-- Patient Details -->
+                        <page string="👥 Patients" name="patients">
+                            <group>
+                                <button name="action_view_patients" 
+                                        string="View All Patients" 
+                                        type="object" 
+                                        class="oe_highlight"
+                                        icon="fa-users"/>
+                            </group>
+                            
+                            <group string="Gender Distribution">
+                                <field name="male_patients" readonly="1"/>
+                                <field name="female_patients" readonly="1"/>
+                            </group>
+                        </page>
+                        
+                        <!-- Appointment Details -->
+                        <page string="📅 Appointments" name="appointments">
+                            <group>
+                                <button name="action_view_appointments" 
+                                        string="View All Appointments" 
+                                        type="object" 
+                                        class="oe_highlight"
+                                        icon="fa-calendar"/>
+                            </group>
+                            
+                            <group string="Appointment Status">
+                                <field name="draft_appointments" readonly="1"/>
+                                <field name="confirmed_appointments" readonly="1"/>
+                                <field name="done_appointments" readonly="1"/>
+                                <field name="cancelled_appointments" readonly="1"/>
+                            </group>
+                        </page>
+                        
+                        <!-- Financial Details -->
+                        <page string="💰 Financials" name="financials">
+                            <group>
+                                <button name="action_view_billings" 
+                                        string="View All Billings" 
+                                        type="object" 
+                                        class="oe_highlight"
+                                        icon="fa-money"/>
+                            </group>
+                            
+                            <group string="Revenue Statistics">
+                                <field name="total_revenue" widget="monetary" readonly="1"/>
+                                <field name="total_paid" widget="monetary" readonly="1"/>
+                                <field name="total_pending" widget="monetary" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="action_hospital_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">hospital.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'form_view_initial_mode': 'readonly'}</field>
+    </record>
+
+    <!-- Dashboard Menu -->
+    <menuitem id="menu_hospital_dashboard"
+              name="📊 Dashboard"
+              parent="menu_hospital_root"
+              action="action_hospital_dashboard"
+              sequence="1"/>
+</odoo>

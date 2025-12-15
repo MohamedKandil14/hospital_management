@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Prescription List View -->
+    <record id="view_hospital_prescription_list" model="ir.ui.view">
+        <field name="name">hospital.prescription.list</field>
+        <field name="model">hospital.prescription</field>
+        <field name="arch" type="xml">
+            <list string="Prescriptions" decoration-info="state=='draft'" 
+                  decoration-success="state=='completed'" decoration-muted="state=='cancelled'">
+                <field name="reference"/>
+                <field name="prescription_date"/>
+                <field name="patient_name"/>
+                <field name="doctor_name"/>
+                <field name="diagnosis"/>
+                <field name="medicine_count"/>
+                <field name="state" widget="badge"
+                       decoration-info="state=='draft'"
+                       decoration-primary="state=='confirmed'"
+                       decoration-warning="state=='dispensed'"
+                       decoration-success="state=='completed'"
+                       decoration-muted="state=='cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Prescription Form View -->
+    <record id="view_hospital_prescription_form" model="ir.ui.view">
+        <field name="name">hospital.prescription.form</field>
+        <field name="model">hospital.prescription</field>
+        <field name="arch" type="xml">
+            <form string="Prescription">
+                <header>
+                    <button name="action_confirm" string="Confirm" 
+                            type="object" class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_dispense" string="Dispense Medicines" 
+                            type="object" class="oe_highlight"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_complete" string="Mark as Completed" 
+                            type="object"
+                            invisible="state != 'dispensed'"/>
+                    <button name="action_print_prescription" string="Print Prescription" 
+                            type="object" icon="fa-print"
+                            invisible="state == 'draft'"/>
+                    <button name="action_cancel" string="Cancel" 
+                            type="object"
+                            invisible="state not in ['draft', 'confirmed']"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" 
+                            type="object"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="draft,confirmed,dispensed,completed"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group name="patient_info" string="Patient Information">
+                            <field name="patient_id" 
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="patient_age"/>
+                            <field name="patient_gender"/>
+                        </group>
+                        
+                        <group name="prescription_info" string="Prescription Details">
+                            <field name="doctor_id" 
+                                   options="{'no_create': True}"/>
+                            <field name="doctor_specialty"/>
+                            <field name="prescription_date"/>
+                            <field name="appointment_id" 
+                                   domain="[('patient_id', '=', patient_id)]"
+                                   options="{'no_create': True}"/>
+                            <field name="medical_record_id" 
+                                   domain="[('patient_id', '=', patient_id)]"
+                                   options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <field name="diagnosis" placeholder="Enter diagnosis..."/>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Medicines" name="medicines">
+                            <field name="medicine_line_ids">
+                                <list string="Prescribed Medicines" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="medicine_name"/>
+                                    <field name="medicine_type"/>
+                                    <field name="dosage"/>
+                                    <field name="frequency"/>
+                                    <field name="duration_number"/>
+                                    <field name="duration_unit"/>
+                                    <field name="quantity"/>
+                                    <field name="timing"/>
+                                </list>
+                                <form string="Medicine Details">
+                                    <group>
+                                        <group>
+                                            <field name="medicine_name"/>
+                                            <field name="medicine_type"/>
+                                            <field name="dosage"/>
+                                            <field name="frequency"/>
+                                        </group>
+                                        <group>
+                                            <label for="duration_number" string="Duration"/>
+                                            <div class="o_row">
+                                                <field name="duration_number" class="oe_inline"/>
+                                                <field name="duration_unit" class="oe_inline"/>
+                                            </div>
+                                            <field name="quantity"/>
+                                            <field name="timing"/>
+                                        </group>
+                                    </group>
+                                    <group string="Special Instructions">
+                                        <field name="instructions" nolabel="1" 
+                                               placeholder="Special instructions for this medicine..."/>
+                                    </group>
+                                    <group string="Notes">
+                                        <field name="notes" nolabel="1" 
+                                               placeholder="Additional notes..."/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        
+                        <page string="Instructions" name="instructions">
+                            <group>
+                                <group string="General Instructions">
+                                    <field name="general_instructions" nolabel="1" 
+                                           placeholder="General instructions for the patient..."/>
+                                </group>
+                                
+                                <group string="Follow-up">
+                                    <field name="follow_up_date"/>
+                                </group>
+                            </group>
+                            
+                            <group>
+                                <group string="Dietary Advice">
+                                    <field name="dietary_advice" nolabel="1" 
+                                           placeholder="Dietary recommendations..."/>
+                                </group>
+                                
+                                <group string="Precautions">
+                                    <field name="precautions" nolabel="1" 
+                                           placeholder="Safety precautions and warnings..."/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Additional Notes" name="notes">
+                            <group>
+                                <field name="notes" nolabel="1" 
+                                       placeholder="Any additional notes..."/>
+                            </group>
+                            <group>
+                                <field name="active" widget="boolean_toggle"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Prescription Search View -->
+    <record id="view_hospital_prescription_search" model="ir.ui.view">
+        <field name="name">hospital.prescription.search</field>
+        <field name="model">hospital.prescription</field>
+        <field name="arch" type="xml">
+            <search string="Search Prescriptions">
+                <field name="reference"/>
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <field name="diagnosis"/>
+                
+                <filter string="Draft" name="draft" 
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" 
+                        domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Dispensed" name="dispensed" 
+                        domain="[('state', '=', 'dispensed')]"/>
+                <filter string="Completed" name="completed" 
+                        domain="[('state', '=', 'completed')]"/>
+                
+                <separator/>
+                
+                <filter string="Today" name="today" 
+                        domain="[('prescription_date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="This Week" name="this_week" 
+                        domain="[('prescription_date', '&gt;=', (context_today() - relativedelta(weeks=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="This Month" name="this_month" 
+                        domain="[('prescription_date', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-%d'))]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Patient" name="group_patient" 
+                            context="{'group_by': 'patient_id'}"/>
+                    <filter string="Doctor" name="group_doctor" 
+                            context="{'group_by': 'doctor_id'}"/>
+                    <filter string="Status" name="group_state" 
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Date" name="group_date" 
+                            context="{'group_by': 'prescription_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Prescription Action -->
+    <record id="action_hospital_prescription" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="res_model">hospital.prescription</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_confirmed': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Prescription
+            </p>
+            <p>
+                Manage patient prescriptions and medicine details.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_hospital_prescription_root" 
+              name="Prescriptions" 
+              parent="menu_hospital_root" 
+              sequence="50"/>
+    
+    <menuitem id="menu_hospital_prescription" 
+              name="All Prescriptions" 
+              parent="menu_hospital_prescription_root" 
+              action="action_hospital_prescription" 
+              sequence="10"/>
+</odoo>

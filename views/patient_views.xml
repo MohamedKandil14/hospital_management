@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Root Menu for Hospital Management -->
+    <menuitem id="menu_hospital_root"
+              name="Hospital"
+              sequence="10"/>
+
     <!-- List View -->
-    <record id="view_hospital_patient_tree" model="ir.ui.view">
-        <field name="name">hospital.patient.tree</field>
+    <record id="view_hospital_patient_list" model="ir.ui.view">
+        <field name="name">hospital.patient.list</field>
         <field name="model">hospital.patient</field>
         <field name="arch" type="xml">
             <list>
@@ -73,12 +78,25 @@
                     <field name="state" widget="statusbar" 
                            statusbar_visible="new,waiting,consultation,done"/>
                 </header>
+                
                 <sheet>
+                    <!-- Stat Buttons -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_hospital_appointment)d"
+                                type="action"
+                                class="oe_stat_button"
+                                icon="fa-calendar"
+                                context="{'default_patient_id': id, 'search_default_patient_id': id}">
+                            <field name="appointment_count" widget="statinfo" string="Appointments"/>
+                        </button>
+                    </div>
+                    
                     <div class="oe_title">
                         <h1>
                             <field name="reference" readonly="1"/>
                         </h1>
                     </div>
+                    
                     <group>
                         <group>
                             <field name="name"/>
@@ -94,10 +112,16 @@
                             <field name="active"/>
                         </group>
                     </group>
+                    
                     <group>
                         <field name="notes" placeholder="Add notes here..."/>
                     </group>
                 </sheet>
+                
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
@@ -107,7 +131,7 @@
         <field name="name">hospital.patient.kanban</field>
         <field name="model">hospital.patient</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban class="o_kanban_mobile" default_group_by="state">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="reference"/>
@@ -116,9 +140,19 @@
                 <field name="doctor_id"/>
                 <field name="is_child"/>
                 <field name="active"/>
+                <field name="state"/>
+                <field name="priority"/>
                 <templates>
                     <t t-name="card">
                         <div class="oe_kanban_card oe_kanban_global_click">
+                            <!-- Priority Ribbon -->
+                            <div class="ribbon ribbon-top-right" t-if="record.priority.raw_value &gt;= 2">
+                                <span t-if="record.priority.raw_value == '3'" 
+                                      style="background-color: #dc3545;">Urgent</span>
+                                <span t-elif="record.priority.raw_value == '2'" 
+                                      style="background-color: #ffc107;">High</span>
+                            </div>
+                            
                             <!-- Card Header -->
                             <div class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title">
@@ -161,12 +195,10 @@
                                               class="badge badge-warning">
                                             <i class="fa fa-child"/> Child
                                         </span>
+                                        <field name="priority" widget="priority"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <span t-if="record.active.raw_value" 
-                                              class="badge badge-success">Active</span>
-                                        <span t-else="" 
-                                              class="badge badge-secondary">Inactive</span>
+                                        <field name="state" widget="badge"/>
                                     </div>
                                 </div>
                             </div>
@@ -184,14 +216,29 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
+                <field name="reference"/>
                 <field name="age"/>
                 <field name="gender"/>
                 <field name="doctor_id"/>
+                <field name="state"/>
+                
+                <!-- Filters -->
+                <filter string="New" name="new" domain="[('state', '=', 'new')]"/>
+                <filter string="Waiting" name="waiting" domain="[('state', '=', 'waiting')]"/>
+                <filter string="In Consultation" name="consultation" domain="[('state', '=', 'consultation')]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                <separator/>
                 <filter string="Children" name="children" domain="[('is_child', '=', True)]"/>
                 <filter string="Adults" name="adults" domain="[('is_child', '=', False)]"/>
+                <separator/>
+                <filter string="High Priority" name="high_priority" domain="[('priority', 'in', ['2', '3'])]"/>
+                
+                <!-- Group By -->
                 <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
                     <filter string="Gender" name="group_gender" context="{'group_by': 'gender'}"/>
                     <filter string="Doctor" name="group_doctor" context="{'group_by': 'doctor_id'}"/>
+                    <filter string="Priority" name="group_priority" context="{'group_by': 'priority'}"/>
                 </group>
             </search>
         </field>
@@ -209,11 +256,7 @@
         </field>
     </record>
 
-    <!-- Menu Items -->
-    <menuitem id="menu_hospital_root"
-              name="Hospital"
-              sequence="10"/>
-
+    <!-- Menu Item -->
     <menuitem id="menu_hospital_patient"
               name="Patients"
               parent="menu_hospital_root"

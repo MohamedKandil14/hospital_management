@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menu for Hospital Management -->
+    <menuitem id="menu_hospital_root" 
+              name="Hospital" 
+              sequence="10" 
+              web_icon="hospital_management,static/description/icon.png"/>
+
+    <!-- Medical Record List View -->
+    <record id="view_medical_record_list" model="ir.ui.view">
+        <field name="name">hospital.medical.record.list</field>
+        <field name="model">hospital.medical.record</field>
+        <field name="arch" type="xml">
+            <list string="Medical Records" decoration-info="state=='draft'" 
+                  decoration-success="state=='confirmed'" decoration-muted="state=='archived'">
+                <field name="reference"/>
+                <field name="record_date"/>
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <field name="record_type"/>
+                <field name="diagnosis"/>
+                <field name="attachment_count" widget="badge"/>
+                <field name="state" widget="badge" 
+                       decoration-info="state=='draft'"
+                       decoration-success="state=='confirmed'"
+                       decoration-muted="state=='archived'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Medical Record Form View -->
+    <record id="view_medical_record_form" model="ir.ui.view">
+        <field name="name">hospital.medical.record.form</field>
+        <field name="model">hospital.medical.record</field>
+        <field name="arch" type="xml">
+            <form string="Medical Record">
+                <header>
+                    <button name="action_confirm" string="Confirm" 
+                            type="object" class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_archive_record" string="Archive" 
+                            type="object" 
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" 
+                            type="object" 
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="draft,confirmed,archived"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_attachments" 
+                                type="object" 
+                                class="oe_stat_button" 
+                                icon="fa-paperclip">
+                            <field name="attachment_count" widget="statinfo" 
+                                   string="Attachments"/>
+                        </button>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group name="basic_info" string="Basic Information">
+                            <field name="patient_id" 
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="patient_age"/>
+                            <field name="patient_gender"/>
+                            <field name="doctor_id" 
+                                   options="{'no_create': True}"/>
+                            <field name="appointment_id" 
+                                   options="{'no_create': True}"/>
+                        </group>
+                        
+                        <group name="record_info" string="Record Details">
+                            <field name="record_date"/>
+                            <field name="record_type"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Medical Information" name="medical_info">
+                            <group>
+                                <group string="Symptoms &amp; Diagnosis">
+                                    <field name="symptoms" nolabel="1" 
+                                           placeholder="Patient symptoms..."/>
+                                    <field name="diagnosis" nolabel="1" 
+                                           placeholder="Doctor's diagnosis..."/>
+                                </group>
+                                
+                                <group string="Treatment">
+                                    <field name="treatment" nolabel="1" 
+                                           placeholder="Treatment plan and prescriptions..."/>
+                                </group>
+                            </group>
+                            
+                            <group string="Additional Notes">
+                                <field name="notes" nolabel="1" 
+                                       placeholder="Any additional medical notes..."/>
+                            </group>
+                        </page>
+                        
+                        <page string="Vital Signs" name="vital_signs">
+                            <group>
+                                <group string="Measurements">
+                                    <field name="blood_pressure" 
+                                           placeholder="e.g., 120/80"/>
+                                    <field name="temperature"/>
+                                    <field name="pulse"/>
+                                </group>
+                                
+                                <group string="Physical Data">
+                                    <field name="weight"/>
+                                    <field name="height"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Attachments" name="attachments">
+                            <group>
+                                <field name="attachment_ids" widget="many2many_binary" 
+                                       nolabel="1" 
+                                       context="{'default_res_model': 'hospital.medical.record', 'default_res_id': id}">
+                                    <list string="Files">
+                                        <field name="name"/>
+                                        <field name="mimetype"/>
+                                        <field name="file_size" widget="file_size"/>
+                                        <field name="create_date"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Medical Record Search View -->
+    <record id="view_medical_record_search" model="ir.ui.view">
+        <field name="name">hospital.medical.record.search</field>
+        <field name="model">hospital.medical.record</field>
+        <field name="arch" type="xml">
+            <search string="Search Medical Records">
+                <field name="reference"/>
+                <field name="patient_id"/>
+                <field name="doctor_id"/>
+                <field name="diagnosis"/>
+                
+                <filter string="Draft" name="draft" 
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" 
+                        domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Archived" name="archived" 
+                        domain="[('state', '=', 'archived')]"/>
+                
+                <separator/>
+                
+                <filter string="Consultation" name="consultation" 
+                        domain="[('record_type', '=', 'consultation')]"/>
+                <filter string="Lab Test" name="lab_test" 
+                        domain="[('record_type', '=', 'lab_test')]"/>
+                <filter string="X-Ray" name="xray" 
+                        domain="[('record_type', '=', 'xray')]"/>
+                <filter string="Scan" name="scan" 
+                        domain="[('record_type', '=', 'scan')]"/>
+                
+                <separator/>
+                
+                <filter string="Today" name="today" 
+                        domain="[('record_date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="This Week" name="this_week" 
+                        domain="[('record_date', '&gt;=', (context_today() - relativedelta(weeks=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="This Month" name="this_month" 
+                        domain="[('record_date', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-%d'))]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Patient" name="group_patient" 
+                            context="{'group_by': 'patient_id'}"/>
+                    <filter string="Doctor" name="group_doctor" 
+                            context="{'group_by': 'doctor_id'}"/>
+                    <filter string="Record Type" name="group_type" 
+                            context="{'group_by': 'record_type'}"/>
+                    <filter string="Status" name="group_state" 
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Date" name="group_date" 
+                            context="{'group_by': 'record_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Medical Record Action -->
+    <record id="action_medical_record" model="ir.actions.act_window">
+        <field name="name">Medical Records</field>
+        <field name="res_model">hospital.medical.record</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_confirmed': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Medical Record
+            </p>
+            <p>
+                Track patient medical history, diagnoses, treatments, and attach medical files.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_medical_record_root" 
+              name="Medical Records" 
+              parent="menu_hospital_root" 
+              sequence="30"/>
+    
+    <menuitem id="menu_medical_record" 
+              name="All Records" 
+              parent="menu_medical_record_root" 
+              action="action_medical_record" 
+              sequence="10"/>
+</odoo>
